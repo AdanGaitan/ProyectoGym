@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "mastergym-4cd65": {
+      "hosting": {
+        "mastergym": [
+          "mastergym-4cd65"
+        ]
+      }
+    }
+  }
+}
