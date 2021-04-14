@@ -3,6 +3,9 @@ import { AngularFirestore, AngularFirestoreCollection, validateEventsArray } fro
 import { AngularFireStorage } from '@angular/fire/storage';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import Swal from 'sweetalert2';
+import { MensajesService } from '../services/mensajes.service';
+
 
 @Component({
   selector: 'app-agregar-cliente',
@@ -14,9 +17,10 @@ export class AgregarClienteComponent implements OnInit {
   formularioCliente:FormGroup;
   porcentajeSubida:number=0;
   urlImagen:string='';
+ 
   id:string;
   esEditable:boolean=false;
-  constructor(private fb:FormBuilder,private storage: AngularFireStorage,public db:AngularFirestore,private activeRoute:ActivatedRoute) { }
+  constructor(private fb:FormBuilder,private storage: AngularFireStorage,public db:AngularFirestore,private activeRoute:ActivatedRoute,private msj:MensajesService) { }
 
   ngOnInit(): void {
 
@@ -66,8 +70,8 @@ export class AgregarClienteComponent implements OnInit {
     this.formularioCliente.value.imgUrl = this.urlImagen;
     this.formularioCliente.value.fechaNacimiento = new Date(this.formularioCliente.value.fechaNacimiento);
     this.db.collection('clientes').add(this.formularioCliente.value).then((termino)=>{
-      console.log('registro creado');
-    })
+      this.msj.mensajeCorrecto('Agregar','Se agrego Correctamente');
+    });
   }
 
   editar()
@@ -76,7 +80,11 @@ export class AgregarClienteComponent implements OnInit {
     this.formularioCliente.value.fechaNacimiento = new Date(this.formularioCliente.value.fechaNacimiento);
     
 
-    this.db.doc(`clientes/${this.id}`).update(this.formularioCliente.value);
+    this.db.doc(`clientes/${this.id}`).update(this.formularioCliente.value).then((termino)=>{
+      this.msj.mensajeCorrecto('Editar','Se edito correctamente');
+    }).catch(()=>{
+     this.msj.mensajeError('Error','No se puedo editar el registro')
+    })
   }
 
 
@@ -86,13 +94,16 @@ export class AgregarClienteComponent implements OnInit {
     if(event.target.files.length > 0)
     {
    
+
+          let nombre = new Date().getTime().toString();
           let file = event.target.files[0];
+          let extension = file.name.toString().substr(file.name.toString().lastIndexOf('.'));
           let nameFile= file.name;
-          const filePath = `imagenCliente/${nameFile}`;
+          const filePath = `imagenCliente/${nombre}${extension}`;
           const ref = this.storage.ref(filePath);
           const task = ref.put(file);
           task.then((objeto)=>{
-            console.log('imagen subida')
+           
             ref.getDownloadURL().subscribe((url)=>{
               
               this.urlImagen = url;
