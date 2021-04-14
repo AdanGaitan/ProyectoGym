@@ -83,7 +83,7 @@ export class AgregarClienteComponent implements OnInit {
     this.db.doc(`clientes/${this.id}`).update(this.formularioCliente.value).then((termino)=>{
       this.msj.mensajeCorrecto('Editar','Se edito correctamente');
     }).catch(()=>{
-     this.msj.mensajeError('Error','No se puedo editar el registro')
+     this.msj.mensajeError('Error','No se puedo editar el registro');
     })
   }
 
