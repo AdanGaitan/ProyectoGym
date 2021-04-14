@@ -28,28 +28,38 @@ export class PreciosComponent implements OnInit {
       duracion:['',Validators.required],
       tipoDuracion:['',Validators.required]
     })
+    this.mostrarPrecio();
+   
+  }
+
+  mostrarPrecio()
+  {
 
     this.db.collection<Precios>('precios').get().subscribe((resultado)=>{
-       resultado.docs.forEach((dato)=>{
+      this.precios.length = 0;
 
-         let precio = dato.data() as Precios;
-         precio.id = dato.id;
-         precio.ref=dato.ref;
-         this.precios.push(precio);
+      resultado.docs.forEach((dato)=>{
+
+        let precio = dato.data() as Precios;
+        precio.id = dato.id;
+        precio.ref=dato.ref;
+        this.precios.push(precio);
+       
         
-         
-       })
-    })
+      });
+   });
+
   }
 
   agregar(){
     this.db.collection<Precios>('precios').add(this.formularioPrecio.value).then(()=>{
       this.msj.mensajeCorrecto('Agregado','Se agrego Correctamente');
       this.formularioPrecio.reset();
+      this.mostrarPrecio();
     }).catch(()=>{
       this.msj.mensajeError('error','Ocurrio un error')
     })
-    console.log(this.formularioPrecio.value)
+  
   }
 
  
@@ -68,7 +78,14 @@ export class PreciosComponent implements OnInit {
 
   editar()
   {
-    this.db.doc('precios')
+    this.db.doc(`precios/${this.id}`).update(this.formularioPrecio.value).then(()=>{
+      this.msj.mensajeCorrecto('Editar','Se edito correctamente');
+      this.formularioPrecio.reset();
+      this.esEditar=false;
+    }).catch(()=>{
+      this.msj.mensajeError('Error','No se puedo editar')
+    })
+    this.mostrarPrecio();
   }
 
 }
