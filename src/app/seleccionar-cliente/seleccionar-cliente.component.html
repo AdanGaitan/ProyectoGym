@@ -1,17 +1,17 @@
 <div class="clientes">
     <div class="form-group" *ngIf="!nombre">
         <label for=""> Seleccione un Cliente</label>
-        <input (input)="buscarClientes($event.target.value)" class="form-control" type="text" placeholder="Busque un cliente">
+        <input (input)="buscarClientes($event.target.value)" class="form-control" type="text" id="txtNombre2" placeholder="Busque un cliente">
     </div>
     <div class="form-group" *ngIf="nombre" >
        
         <div class="row">
-            <div class="col-sm-10 mt-3">
+            <div class="col-sm-9 mt-3">
                 <label for="">Cliente</label>
-                <input [(ngModel)]="nombre" disabled type="text" class="form-control">
+                <input [(ngModel)]="nombre" disabled type="text" class="form-control" id="txtNombre">
             </div>
-            <div class="col-sm-2">
-                <button (click)="cancelarCliente()" class="btn btn-danger mt-5">Cancelar</button>
+            <div class="col-sm-3">
+                <button (click)="cancelarCliente()" id="cancelar" class="btn btn-danger mt-5">Cancelar</button>
             </div>
 
         </div>
